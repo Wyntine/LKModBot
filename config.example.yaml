@@ -1,0 +1,11 @@
+system:
+  token: "token"
+  logLevel: info
+  serverId: "server-id"
+  developers: []
+bot:
+  presenceRefreshTime: 10000
+  presences:
+    - name: "presence-name"
+      type: playing
+      status: "idle"
