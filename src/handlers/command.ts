@@ -1,0 +1,174 @@
+import type { Client } from "discord.js";
+import { Command } from "../classes/commands/Command.ts";
+import { Logger } from "../classes/Logger.ts";
+import { readdir } from "fs/promises";
+import { join } from "path";
+import { CommandData } from "../classes/commands/CommandData.ts";
+import { SubcommandGroup } from "../classes/commands/SubcommandGroup.ts";
+import { isTypeScriptFile } from "../utils/fileUtils.ts";
+import type { Dirent } from "fs";
+import { Subcommand } from "../classes/commands/Subcommand.ts";
+
+const logger = new Logger("Commands");
+const commands: Map<string, Command> = new Map();
+
+export function getCommand(commandName: string): Command | undefined {
+  return commands.get(commandName);
+}
+
+export async function reloadCommands(): Promise<void> {
+  commands.clear();
+
+  const dir = Command.commandsDir;
+  const files = await readdir(dir, { withFileTypes: true, encoding: "utf-8" });
+
+  for (const file of files) {
+    const newPath = join(dir, file.name);
+
+    if (file.isDirectory()) {
+      const command = new Command({
+        description: "test",
+        async execute(interaction) {
+          const subcommandName = interaction.options.getSubcommand(false);
+          const subcommandGroupName =
+            interaction.options.getSubcommandGroup(false);
+
+          const subcommand = subcommandName
+            ? this.subcommands.get(subcommandName)
+            : undefined;
+
+          const subcommandGroup = subcommandGroupName
+            ? this.subcommandGroups.get(subcommandGroupName)
+            : undefined;
+
+          if (!subcommand && !subcommandGroup) {
+            CommandData.logger.throw(
+              "Given subcommand/subcommand group from the command does not exist.",
+            );
+          }
+
+          subcommandGroup
+            ? subcommandGroup.execute(interaction)
+            : subcommand?.execute(interaction);
+        },
+      });
+
+      command.setName(file.name);
+      await readSubcommandOnlyCommand(command, newPath);
+      commands.set(command.getName(), command);
+    } else {
+      const command = await readCommand(file);
+
+      if (!command) {
+        continue;
+      }
+
+      commands.set(command.getName(), command);
+    }
+  }
+}
+
+async function readCommand(commandFile: Dirent): Promise<Command | undefined> {
+  const commandPath = join(commandFile.parentPath, commandFile.name);
+
+  if (!isTypeScriptFile(commandFile.name)) {
+    logger.error(`File '${commandPath}' is not a TypeScript file.`);
+    return;
+  }
+
+  const importPath = join("..", "..", commandPath);
+  const fileImport = await import(importPath);
+
+  if (!("default" in fileImport) || !(fileImport.default instanceof Command)) {
+    logger.error(`File '${commandPath}' does not have correct Command export.`);
+    return;
+  }
+
+  const command = fileImport.default as Command;
+  command.setName(commandFile.name);
+  return command;
+}
+
+async function readSubcommandOnlyCommand(
+  command: Command,
+  commandDir: string,
+): Promise<void> {
+  const files = await readdir(commandDir, {
+    withFileTypes: true,
+    encoding: "utf-8",
+  });
+
+  for (const file of files) {
+    const commandPath = join(file.parentPath, file.name);
+
+    if (file.isDirectory()) {
+      const newDir = join(commandDir, file.name);
+      const subcommandGroup = new SubcommandGroup({ description: "test" });
+
+      subcommandGroup.setName(file.name);
+      await readSubcommandGroup(subcommandGroup, newDir);
+      command.addSubcommandGroup(subcommandGroup);
+    } else if (file.isFile()) {
+      await readSubcommand(command, file);
+    } else {
+      logger.throw(`Given file '${commandPath}' is invalid.`);
+    }
+  }
+}
+
+async function readSubcommand(
+  command: Command | SubcommandGroup,
+  subcommandFile: Dirent,
+): Promise<void> {
+  const subcommandPath = join(subcommandFile.parentPath, subcommandFile.name);
+
+  if (!isTypeScriptFile(subcommandFile.name)) {
+    logger.error(`File '${subcommandPath}' is not a TypeScript file.`);
+    return;
+  }
+
+  const importPath = join("..", "..", subcommandPath);
+  const fileImport = await import(importPath);
+
+  if (
+    !("default" in fileImport) ||
+    !(fileImport.default instanceof Subcommand)
+  ) {
+    logger.error(
+      `File '${subcommandPath}' does not have correct Subcommand export.`,
+    );
+    return;
+  }
+
+  const subcommand = fileImport.default as Subcommand;
+  subcommand.setName(subcommandFile.name);
+  command.addSubcommand(subcommand);
+}
+
+async function readSubcommandGroup(
+  subcommandGroup: SubcommandGroup,
+  subcommandGroupDir: string,
+): Promise<void> {
+  const files = await readdir(subcommandGroupDir, {
+    withFileTypes: true,
+    encoding: "utf-8",
+  });
+
+  for (const file of files) {
+    const subcommandPath = join(file.parentPath, file.name);
+
+    if (file.isFile()) {
+      await readSubcommand(subcommandGroup, file);
+    } else {
+      logger.throw(`Given file '${subcommandPath}' is invalid.`);
+    }
+  }
+}
+
+export async function registerCommands(client: Client<true>): Promise<void> {
+  const slashCommands = commands
+    .values()
+    .toArray()
+    .map((command) => command.getData());
+  await client.application.commands.set(slashCommands);
+}

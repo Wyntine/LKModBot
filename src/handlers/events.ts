@@ -30,6 +30,7 @@ export async function reloadEvents() {
 
     if (!isTypeScriptFile(file.name)) {
       logger.warn(`File '${eventPath}' is not a TypeScript file.`);
+      continue;
     }
 
     try {

@@ -16,7 +16,7 @@ export class Logger {
 
   private tag: string;
 
-  constructor(tag?: string) {
+  public constructor(tag?: string) {
     const finalTag = tag ?? "System";
     this.tag = finalTag;
     Logger.tags.add(finalTag);

@@ -18,7 +18,7 @@ export class Event<Category extends Events = Events> {
 
   private fileName?: string;
 
-  constructor(options: EventOptions<Category>) {
+  public constructor(options: EventOptions<Category>) {
     this.name = options.name;
     this.once = options.once || false;
     this.category = options.category;

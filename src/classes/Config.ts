@@ -17,7 +17,7 @@ export class Config {
   private fileWatcher: FSWatcher | null = null;
   private configFilePath: string;
 
-  constructor() {
+  public constructor() {
     this.configFilePath = join(process.cwd(), Config.configFileName);
     this.config = this.loadConfig(true);
     Config._isReady = true;
