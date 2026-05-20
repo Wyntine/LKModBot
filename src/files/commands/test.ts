@@ -1,8 +1,9 @@
 import { Command } from "../../classes/commands/Command.ts";
+import { Options } from "../../classes/commands/Options.ts";
 
 export default new Command({
-  description: "deneme",
+  options: Options.create("deneme 1").setCooldown(10),
   async execute(interaction) {
-    interaction.reply("başarılı");
+    interaction.reply("başarılı 1");
   },
 });
