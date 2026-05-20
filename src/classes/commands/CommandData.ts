@@ -5,35 +5,24 @@ import type {
   BaseCommandRunner,
 } from "../../types/commands.js";
 import { Logger } from "../Logger.ts";
+import { Options } from "./Options.ts";
 
 export abstract class CommandData<Type extends CommandBuilderTypes> {
   public static readonly logger: Logger = new Logger("Command");
 
-  public readonly devOnly?: boolean;
-  public readonly cooldown?: number;
+  public readonly options: Options;
   public abstract execute: BaseCommandRunner;
 
-  protected readonly description: string;
   protected data: Type;
   protected name?: string;
 
-  public constructor({
-    description,
-    builder,
-    devOnly,
-    cooldown,
-  }: CommandDataOptions<Type>) {
-    this.description = description;
+  public constructor({ builder, options }: CommandDataOptions<Type>) {
+    this.options = Options.from(options);
     this.data = builder;
-    if (devOnly !== undefined) {
-      this.devOnly = devOnly;
-    }
 
-    if (cooldown !== undefined) {
-      this.cooldown = cooldown;
-    }
-
-    this.updateData((builder) => builder.setDescription(this.description));
+    this.updateData((builder) =>
+      builder.setDescription(this.options.getDescription()),
+    );
   }
 
   public setName(nameOrFileName: string): void {

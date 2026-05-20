@@ -3,14 +3,13 @@ import {
   checkForNewServerJoins,
   startPresenceLoop,
 } from "../../handlers/client.ts";
-import { registerCommands, reloadCommands } from "../../handlers/command.ts";
+import { registerCommands } from "../../handlers/command.ts";
 
 export default new Event({
   name: "startup",
   once: true,
   category: "clientReady",
   async execute(client) {
-    await reloadCommands();
     await registerCommands(client);
     await checkForNewServerJoins();
     this.logger.info(`${client.user.username} is ready!`);

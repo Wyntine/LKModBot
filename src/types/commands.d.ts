@@ -8,6 +8,7 @@ import type { MaybePromise } from "./utils.js";
 import type { Command } from "../classes/commands/Command.ts";
 import type { Subcommand } from "../classes/commands/Subcommand.ts";
 import type { SubcommandGroup } from "../classes/commands/SubcommandGroup.ts";
+import type { Options } from "../classes/commands/Options.ts";
 
 export type CommandBuilderTypes =
   | SlashCommandBuilder
@@ -26,10 +27,8 @@ export type CommandRunner<Command extends CommandTypes> = (
 ) => MaybePromise<unknown>;
 
 export interface CommandDataOptions<Type extends CommandBuilderTypes> {
-  description: string;
   builder: Type;
-  devOnly?: boolean;
-  cooldown?: number;
+  options: OptionsData | Options;
 }
 
 export interface CommandOptions extends CommandDataOptions<SlashCommandBuilder> {
@@ -44,4 +43,10 @@ export interface SubcommandOptions extends CommandDataOptions<SlashCommandSubcom
 
 export interface SubcommandGroupOptions extends CommandDataOptions<SlashCommandSubcommandGroupBuilder> {
   builder?: SlashCommandSubcommandGroupBuilder;
+}
+
+export interface OptionsData {
+  description: string;
+  devOnly?: boolean;
+  cooldown?: number;
 }
