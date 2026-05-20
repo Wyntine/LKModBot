@@ -53,6 +53,14 @@ export async function startPresenceLoop() {
   presenceInterval = setInterval(updatePresence, refreshTime);
 }
 
+export function stopPresenceLoop() {
+  if (presenceInterval) {
+    clearInterval(presenceInterval);
+    presenceIndex = -1;
+    presenceInterval = null;
+  }
+}
+
 export function convertPresence(type: string): ActivityType {
   switch (type) {
     case "playing":

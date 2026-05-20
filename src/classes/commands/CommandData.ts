@@ -1,4 +1,4 @@
-import { basename, extname } from "path";
+import { extname } from "path";
 import type {
   CommandDataOptions,
   CommandBuilderTypes,
