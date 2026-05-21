@@ -53,9 +53,9 @@ export async function reloadEvents() {
       listen(...event.createListenerArgs());
       events.push(event);
     } catch (error) {
-      console.error(error);
       logger.error(
-        `Unknown error occured while trying to import '${eventPath}'`,
+        `Unknown error occured while trying to import '${eventPath}':`,
+        error,
       );
     }
   }

@@ -65,9 +65,12 @@ export class Logger {
     message: string,
     logLevel: LogLevel,
   ): string {
+    const logStr = Logger.logLevelString(logLevel);
     const date = new Date().toLocaleString();
-    const pad = " ".padEnd(Logger.maxTagLength - tag.length + 1);
-    return `[${date}] [${Logger.logLevelString(logLevel)}] [${tag}]${pad}: ${message}`;
+    const pad = "".padEnd(
+      Logger.maxTagLength - tag.length + 1 + 5 - logStr.length,
+    );
+    return `[${date}] [${logStr}] [${tag}]${pad} : ${message}`;
   }
 
   private static throw(message: string, tag = Logger.ownTag): never {
@@ -76,34 +79,34 @@ export class Logger {
   }
 
   // Logged with level >= 1 (LogLevel.ERROR)
-  public error(message: string): void {
+  public error(message: string, ...messages: unknown[]): void {
     const level = logLevel.ERROR;
     if (this.canLogged(level)) {
-      console.error(this.formatMessage(message, level));
+      console.error(this.formatMessage(message, level), ...messages);
     }
   }
 
   // Logged with level > 2 (LogLevel.WARN)
-  public warn(message: string): void {
+  public warn(message: string, ...messages: unknown[]): void {
     const level = logLevel.WARN;
     if (this.canLogged(level)) {
-      console.warn(this.formatMessage(message, level));
+      console.warn(this.formatMessage(message, level), ...messages);
     }
   }
 
   // Logged with level >= 3 (LogLevel.INFO)
-  public info(message: string): void {
+  public info(message: string, ...messages: unknown[]): void {
     const level = logLevel.INFO;
     if (this.canLogged(level)) {
-      console.info(this.formatMessage(message, level));
+      console.info(this.formatMessage(message, level), ...messages);
     }
   }
 
   // Logged with level >= 4 (LogLevel.DEBUG)
-  public debug(message: string): void {
+  public debug(message: string, ...messages: unknown[]): void {
     const level = logLevel.DEBUG;
     if (this.canLogged(level)) {
-      console.debug(this.formatMessage(message, level));
+      console.debug(this.formatMessage(message, level), ...messages);
     }
   }
 
