@@ -1,11 +1,13 @@
 import { extname } from "path";
+
+import { Logger } from "../Logger.ts";
+import { Options } from "./Options.ts";
+
 import type {
   CommandDataOptions,
   CommandBuilderTypes,
   BaseCommandRunner,
-} from "../../types/commands.js";
-import { Logger } from "../Logger.ts";
-import { Options } from "./Options.ts";
+} from "../../types/commands.d.ts";
 
 export abstract class CommandData<Type extends CommandBuilderTypes> {
   public static readonly logger: Logger = new Logger("Command");

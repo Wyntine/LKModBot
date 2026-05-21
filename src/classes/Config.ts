@@ -1,12 +1,14 @@
 import type { LogLevel } from "../types/logger.d.ts";
+import type { ClientPresence } from "../types/config.d.ts";
 import type { FSWatcher } from "fs";
-import { configSchema, type ConfigSchema } from "../schemas/configSchema.ts";
-import { Logger } from "./Logger.ts";
-import { join } from "path";
+import type { ConfigSchema } from "../schemas/configSchema.ts";
 import { readFileSync, watch } from "fs";
-import yaml from "yaml";
-import type { ClientPresence } from "../types/config.js";
+import { join } from "path";
+import { parse } from "yaml";
+
 import { convertPresence } from "../handlers/client.ts";
+import { configSchema } from "../schemas/configSchema.ts";
+import { Logger } from "./Logger.ts";
 
 export class Config {
   private static _isReady: boolean = false;
@@ -75,7 +77,7 @@ export class Config {
 
   private loadConfig(firstLoad = true): ConfigSchema {
     const data = readFileSync(this.configFilePath, "utf-8");
-    const loaded: unknown = yaml.parse(data);
+    const loaded: unknown = parse(data);
 
     if (firstLoad) {
       this.config = configSchema.parse(loaded);

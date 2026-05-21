@@ -1,6 +1,7 @@
+import type { ClientPresence } from "../types/config.d.ts";
 import { ActivityType, Client, GatewayIntentBits } from "discord.js";
+
 import { config } from "../classes/Config.ts";
-import type { ClientPresence } from "../types/config.js";
 import { Logger } from "../classes/Logger.ts";
 
 export const availableStatuses = ["idle", "dnd", "online"] as const;

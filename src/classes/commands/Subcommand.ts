@@ -1,5 +1,9 @@
+import type {
+  CommandRunner,
+  SubcommandOptions,
+} from "../../types/commands.d.ts";
 import { SlashCommandSubcommandBuilder } from "discord.js";
-import type { CommandRunner, SubcommandOptions } from "../../types/commands.ts";
+
 import { CommandData } from "./CommandData.ts";
 
 export class Subcommand extends CommandData<SlashCommandSubcommandBuilder> {

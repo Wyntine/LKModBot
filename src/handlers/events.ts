@@ -1,9 +1,10 @@
+import { readdir } from "fs/promises";
 import { join } from "path";
+
 import { Event } from "../classes/Event.ts";
 import { Logger } from "../classes/Logger.ts";
 import { isTypeScriptFile } from "../utils/fileUtils.ts";
 import { client } from "./client.ts";
-import { readdir } from "fs/promises";
 
 const logger = new Logger("Events");
 const events: Event[] = [];

@@ -4,11 +4,11 @@ import type {
   SlashCommandSubcommandBuilder,
   SlashCommandSubcommandGroupBuilder,
 } from "discord.js";
-import type { MaybePromise } from "./utils.js";
-import type { Command } from "../classes/commands/Command.ts";
-import type { Subcommand } from "../classes/commands/Subcommand.ts";
-import type { SubcommandGroup } from "../classes/commands/SubcommandGroup.ts";
-import type { Options } from "../classes/commands/Options.ts";
+import type { MaybePromise } from "./utils.d.ts";
+import type { Command } from "../classes/commands/Command.d.ts";
+import type { Subcommand } from "../classes/commands/Subcommand.d.ts";
+import type { SubcommandGroup } from "../classes/commands/SubcommandGroup.d.ts";
+import type { Options } from "../classes/commands/Options.d.ts";
 
 export type CommandBuilderTypes =
   | SlashCommandBuilder

@@ -1,9 +1,10 @@
-import type { Subcommand } from "./Subcommand.ts";
-import { SlashCommandSubcommandGroupBuilder } from "discord.js";
+import type { Subcommand } from "./Subcommand.d.ts";
 import type {
   CommandRunner,
   SubcommandGroupOptions,
-} from "../../types/commands.ts";
+} from "../../types/commands.d.ts";
+import { SlashCommandSubcommandGroupBuilder } from "discord.js";
+
 import { CommandData } from "./CommandData.ts";
 
 export class SubcommandGroup extends CommandData<SlashCommandSubcommandGroupBuilder> {

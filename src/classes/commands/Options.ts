@@ -1,4 +1,4 @@
-import type { OptionsData } from "../../types/commands.js";
+import type { OptionsData } from "../../types/commands.d.ts";
 import { Logger } from "../Logger.ts";
 
 export class Options {

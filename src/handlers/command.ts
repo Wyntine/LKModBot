@@ -1,14 +1,16 @@
 import type { Client } from "discord.js";
-import { Command } from "../classes/commands/Command.ts";
-import { Logger } from "../classes/Logger.ts";
+import type { Dirent } from "fs";
+import { existsSync } from "fs";
 import { readdir } from "fs/promises";
 import { join } from "path";
+
+import { Command } from "../classes/commands/Command.ts";
 import { CommandData } from "../classes/commands/CommandData.ts";
-import { SubcommandGroup } from "../classes/commands/SubcommandGroup.ts";
-import { isTypeScriptFile } from "../utils/fileUtils.ts";
-import { existsSync, type Dirent } from "fs";
-import { Subcommand } from "../classes/commands/Subcommand.ts";
 import { Options } from "../classes/commands/Options.ts";
+import { Subcommand } from "../classes/commands/Subcommand.ts";
+import { SubcommandGroup } from "../classes/commands/SubcommandGroup.ts";
+import { Logger } from "../classes/Logger.ts";
+import { isTypeScriptFile } from "../utils/fileUtils.ts";
 
 const logger = new Logger("Commands");
 const commands: Map<string, Command> = new Map();

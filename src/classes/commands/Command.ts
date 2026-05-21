@@ -2,12 +2,13 @@
 // TODO: Current commands to be added:
 // /avatar, /server, /profile, /register, /eval, /status, /ban, /kick, /clear
 // src/types/command.ts
-import type { CommandOptions, CommandRunner } from "../../types/commands.ts";
-import type { Subcommand } from "./Subcommand.ts";
-import type { SubcommandGroup } from "./SubcommandGroup.ts";
+import type { CommandOptions, CommandRunner } from "../../types/commands.d.ts";
+import type { Subcommand } from "./Subcommand.d.ts";
+import type { SubcommandGroup } from "./SubcommandGroup.d.ts";
 import { SlashCommandBuilder } from "discord.js";
-import { CommandData } from "./CommandData.ts";
 import { join } from "path";
+
+import { CommandData } from "./CommandData.ts";
 
 export class Command extends CommandData<SlashCommandBuilder> {
   public static readonly commandsDir = join("src", "files", "commands");

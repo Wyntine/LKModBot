@@ -1,6 +1,6 @@
-import { ClientEvents } from "discord.js";
-import type { MaybePromise } from "./utils.js";
-import type { Event } from "../classes/Event.ts";
+import type { MaybePromise } from "./utils.d.ts";
+import type { Event } from "../classes/Event.d.ts";
+import type { ClientEvents } from "discord.js";
 
 export interface EventOptions<Category extends Events> {
   name: string;

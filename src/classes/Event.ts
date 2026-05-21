@@ -3,8 +3,9 @@ import type {
   Events,
   VoidEventRunner,
 } from "../types/events.d.ts";
-import { Logger } from "./Logger.ts";
 import { join } from "path";
+
+import { Logger } from "./Logger.ts";
 
 export class Event<Category extends Events = Events> {
   public static eventsDir: string = join("src", "files", "events");

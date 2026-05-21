@@ -1,4 +1,5 @@
 import z from "zod";
+
 import { availableStatuses } from "../handlers/client.ts";
 
 export type ConfigSchema = z.infer<typeof configSchema>;
