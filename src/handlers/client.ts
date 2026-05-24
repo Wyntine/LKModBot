@@ -20,6 +20,7 @@ export const client = new Client({
     GatewayIntentBits.GuildPresences,
     GatewayIntentBits.MessageContent,
   ],
+  allowedMentions: { parse: [] },
 });
 
 function getNextPresence(): ClientPresence {
