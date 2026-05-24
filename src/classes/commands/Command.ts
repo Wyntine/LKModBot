@@ -2,7 +2,11 @@
 // TODO: Current commands to be added:
 // /avatar, /server, /profile, /register, /eval, /status, /ban, /kick, /clear
 // src/types/command.ts
-import type { CommandOptions, CommandRunner } from "../../types/commands.d.ts";
+import type {
+  CommandOptions,
+  CommandOptionsOnlyBuilderTypes,
+  CommandRunner,
+} from "../../types/commands.d.ts";
 import type { Subcommand } from "./Subcommand.d.ts";
 import type { SubcommandGroup } from "./SubcommandGroup.d.ts";
 import { SlashCommandBuilder } from "discord.js";
@@ -10,7 +14,7 @@ import { join } from "path";
 
 import { CommandData } from "./CommandData.ts";
 
-export class Command extends CommandData<SlashCommandBuilder> {
+export class Command extends CommandData<CommandOptionsOnlyBuilderTypes> {
   public static readonly commandsDir = join("src", "files", "commands");
   public readonly execute: CommandRunner<this>;
   protected readonly subcommands: Map<string, Subcommand> = new Map();
@@ -32,9 +36,13 @@ export class Command extends CommandData<SlashCommandBuilder> {
       CommandData.logger.throw("A subcommand with given name exists.");
     }
 
-    this.updateData(
-      (builder) => builder.addSubcommand(data) as SlashCommandBuilder,
-    );
+    this.updateData((builder) => {
+      if (!("addSubcommand" in builder)) {
+        CommandData.logger.throw("This command can only have options.");
+      }
+
+      return builder.addSubcommand(data) as CommandOptionsOnlyBuilderTypes;
+    });
     this.subcommands.set(name, subcommand);
   }
 
@@ -46,9 +54,13 @@ export class Command extends CommandData<SlashCommandBuilder> {
       CommandData.logger.throw("A subcommand group with given name exists.");
     }
 
-    this.updateData(
-      (builder) => builder.addSubcommandGroup(data) as SlashCommandBuilder,
-    );
+    this.updateData((builder) => {
+      if (!("addSubcommandGroup" in builder)) {
+        CommandData.logger.throw("This command can only have options.");
+      }
+
+      return builder.addSubcommandGroup(data) as CommandOptionsOnlyBuilderTypes;
+    });
     this.subcommandGroups.set(name, subcommandGroup);
   }
 }

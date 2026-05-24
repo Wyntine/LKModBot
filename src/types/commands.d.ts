@@ -1,6 +1,7 @@
 import type {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
+  SlashCommandOptionsOnlyBuilder,
   SlashCommandSubcommandBuilder,
   SlashCommandSubcommandGroupBuilder,
 } from "discord.js";
@@ -10,8 +11,12 @@ import type { Subcommand } from "../classes/commands/Subcommand.d.ts";
 import type { SubcommandGroup } from "../classes/commands/SubcommandGroup.d.ts";
 import type { Options } from "../classes/commands/Options.d.ts";
 
-export type CommandBuilderTypes =
+export type CommandOptionsOnlyBuilderTypes =
   | SlashCommandBuilder
+  | SlashCommandOptionsOnlyBuilder;
+
+export type CommandBuilderTypes =
+  | CommandOptionsOnlyBuilderTypes
   | SlashCommandSubcommandGroupBuilder
   | SlashCommandSubcommandBuilder;
 
@@ -31,9 +36,9 @@ export interface CommandDataOptions<Type extends CommandBuilderTypes> {
   options: OptionsData | Options;
 }
 
-export interface CommandOptions extends CommandDataOptions<SlashCommandBuilder> {
+export interface CommandOptions extends CommandDataOptions<CommandOptionsOnlyBuilderTypes> {
   execute: CommandRunner<Command>;
-  builder?: SlashCommandBuilder;
+  builder?: CommandOptionsOnlyBuilderTypes;
 }
 
 export interface SubcommandOptions extends CommandDataOptions<SlashCommandSubcommandBuilder> {
